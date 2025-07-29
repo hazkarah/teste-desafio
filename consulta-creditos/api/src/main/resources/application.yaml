@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: consulta-creditos
+  datasource:
+    url: jdbc:postgresql://localhost:5430/creditos
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect

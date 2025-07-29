@@ -1,0 +1,146 @@
+name: gestionna-teste
+
+services:
+#  api:
+#    build:
+#      context: ./api
+#      dockerfile: docker/Dockerfile
+#    container_name: api-creditos
+#    environment:
+#      # Configurações do banco
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5430/creditos_db
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: postgres
+#
+#      # Configurações do Kafka
+#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9093
+#
+#      # Configurações gerais
+#      SPRING_PROFILES_ACTIVE: docker
+#      SERVER_PORT: 8080
+#      LOG_LEVEL: INFO
+#      LOG_FILE: /app/logs/application.log
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      kafka:
+#        condition: service_healthy
+#    networks:
+#      - creditos
+#    restart: unless-stopped
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#
+#  app:
+#    build:
+#      context: ./app
+#      dockerfile: docker/Dockerfile
+#    container_name: app-creditos
+#    ports:
+#      - "80:80"
+#    depends_on:
+#      - api
+#    networks:
+#      - creditos
+#    restart: unless-stopped
+
+  # Servicos Base
+  postgres:
+    image: postgres:16
+    container_name: postgres-creditos
+    environment:
+      POSTGRES_DB: creditos 
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5430:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./api/src/main/resources/db/init:/docker-entrypoint-initdb.d/
+    networks:
+      - creditos
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d creditos"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: zookeeper-creditos
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+      - zookeeper_logs:/var/lib/zookeeper/log
+    networks:
+      - creditos
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: kafka-creditos
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_LOG_RETENTION_HOURS: 168  #7 dias
+    ports:
+      - "9092:9092"
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    networks:
+      - creditos
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui-creditos
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      KAFKA_CLUSTERS_0_NAME: creditos-cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9093
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    ports:
+      - "8090:8080"
+    networks:
+      - creditos
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  kafka_data:
+    driver: local
+  zookeeper_data:
+    driver: local
+  zookeeper_logs:
+    driver: local
+
+networks:
+  creditos:
+    driver: bridge
