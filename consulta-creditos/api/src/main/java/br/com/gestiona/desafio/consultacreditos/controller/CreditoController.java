@@ -1,7 +1,11 @@
 package br.com.gestiona.desafio.consultacreditos.controller;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,40 +16,33 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import br.com.gestiona.desafio.consultacreditos.domain.dto.CreditoDTO;
-import br.com.gestiona.desafio.consultacreditos.domain.jpa.Credito;
-import br.com.gestiona.desafio.consultacreditos.repository.jpa.CreditoRepository;
+import br.com.gestiona.desafio.consultacreditos.exceptions.BusinessException;
+import br.com.gestiona.desafio.consultacreditos.service.adapters.CreditoServiceAdapter;
 
 @RestController
 @RequestMapping("/api/creditos")
 @Tag(name = "Créditos", description = "Consulta creditos")
+@RequiredArgsConstructor
 public class CreditoController {
 
-    @Autowired
-    private CreditoRepository creditoRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    private final CreditoServiceAdapter creditoService;
 
     @Operation(summary = "Consulta por número da NFSe")
     @GetMapping("/{numeroNfse}")
-    public ResponseEntity<CreditoDTO> getCreditoPorNfse(@PathVariable String numeroNfse) {
-        Credito credito = creditoRepository.findByNumeroNfse(numeroNfse);
-        if (credito == null) {
-            return ResponseEntity.notFound().build();
-        }
-        CreditoDTO dto = modelMapper.map(credito, CreditoDTO.class);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<List<CreditoDTO>> getCreditoPorNfse(@PathVariable String numeroNfse) throws BusinessException {
+        return ResponseEntity.ok(creditoService.buscarPorNumeroNfse(numeroNfse, Pageable.unpaged()).getContent());
     }
 
     @Operation(summary = "Consulta por número do crédito")
     @GetMapping("/credito/{numeroCredito}")
-    public ResponseEntity<CreditoDTO> getCreditoPorNumero(@PathVariable String numeroCredito) {
-        Credito credito = creditoRepository.findByNumeroCredito(numeroCredito);
-        if (credito == null) {
-            return ResponseEntity.notFound().build();
-        }
-        CreditoDTO dto = modelMapper.map(credito, CreditoDTO.class);
-        return ResponseEntity.ok(dto);
+    public ResponseEntity<CreditoDTO> getCreditoPorNumero(@PathVariable String numeroCredito) throws BusinessException {
+        return ResponseEntity.ok(creditoService.buscarPorNumeroCredito(numeroCredito));
     }
-}
 
+    @Operation(summary = "Consulta paginada por número da NFSe")
+    @GetMapping("/{numeroNfse}/page")
+    public ResponseEntity<Page<CreditoDTO>> getPageCreditoPorNfse(@PathVariable String numeroNfse, Pageable pageable) throws BusinessException {
+        return ResponseEntity.ok(creditoService.buscarPorNumeroNfse(numeroNfse, pageable));
+    }
+
+}

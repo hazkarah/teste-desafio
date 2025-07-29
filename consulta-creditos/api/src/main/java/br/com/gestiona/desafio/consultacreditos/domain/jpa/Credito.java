@@ -12,9 +12,11 @@ import java.time.LocalDate;
 
 import lombok.Data;
 
+import br.com.gestiona.desafio.consultacreditos.domain.DomainConstants;
+
 @Data
 @Entity
-@Table(name = "credito")
+@Table(name = "credito", schema = DomainConstants.CREDITOS_SCHEMA)
 public class Credito {
 
     @Id

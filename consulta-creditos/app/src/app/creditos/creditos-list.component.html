@@ -1,0 +1,45 @@
+<div class="max-w-xl mx-auto p-4">
+  <h2 class="text-2xl font-bold mb-4">Consulta de Créditos</h2>
+  <form [formGroup]="form" (ngSubmit)="buscar()" class="space-y-4">
+    <div class="flex items-center gap-4">
+      <label class="flex items-center gap-2">
+        <input type="radio" formControlName="tipoConsulta" value="nfse" />
+        Busca NFS-e
+      </label>
+      <label class="flex items-center gap-2">
+        <input type="radio" formControlName="tipoConsulta" value="credito" />
+        Número do Crédito
+      </label>
+    </div>
+    <input
+      class="w-full border rounded px-3 py-2"
+      type="text"
+      formControlName="valorConsulta"
+      placeholder="Digite o valor para consulta"
+      required
+    />
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
+            [disabled]="carregando">
+      {{ carregando ? 'Buscando...' : 'Buscar' }}
+    </button>
+  </form>
+
+  <div *ngIf="erro" class="text-red-600 mt-4">{{ erro }}</div>
+
+  <div *ngIf="credito" class="mt-6 bg-white shadow rounded p-4">
+    <h3 class="text-lg font-semibold mb-2">Detalhes do Crédito</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div><strong>Número Crédito:</strong> {{ credito.numeroCredito }}</div>
+      <div><strong>Número NFS-e:</strong> {{ credito.numeroNfse }}</div>
+      <div><strong>Data Constituição:</strong> {{ credito.dataConstituicao }}</div>
+      <div><strong>Valor ISSQN:</strong> {{ credito.valorIssqn | currency:'BRL' }}</div>
+      <div><strong>Tipo Crédito:</strong> {{ credito.tipoCredito }}</div>
+      <div><strong>Simples Nacional:</strong> {{ credito.simplesNacional }}</div>
+      <div><strong>Alíquota:</strong> {{ credito.aliquota }}%</div>
+      <div><strong>Valor Faturado:</strong> {{ credito.valorFaturado | currency:'BRL' }}</div>
+      <div><strong>Valor Dedução:</strong> {{ credito.valorDeducao | currency:'BRL' }}</div>
+      <div><strong>Base de Cálculo:</strong> {{ credito.baseCalculo | currency:'BRL' }}</div>
+    </div>
+  </div>
+</div>
+

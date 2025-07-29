@@ -54,7 +54,7 @@ services:
     image: postgres:16
     container_name: postgres-creditos
     environment:
-      POSTGRES_DB: creditos 
+      POSTGRES_DB: gestionna
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
@@ -66,7 +66,7 @@ services:
       - creditos
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d creditos"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d gestionna"]
       interval: 30s
       timeout: 10s
       retries: 5

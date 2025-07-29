@@ -1,0 +1,20 @@
+.credito-card {
+  @apply bg-white shadow rounded p-4 mb-4;
+}
+
+.credito-label {
+  @apply font-semibold;
+}
+
+.credito-value {
+  @apply text-gray-700;
+}
+
+.loading {
+  @apply animate-pulse text-blue-600;
+}
+
+.error {
+  @apply text-red-600;
+}
+
