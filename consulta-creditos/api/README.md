@@ -19,7 +19,7 @@
    - Maven 3.8+
 
 2. **Subir dependências**:
-   - Execute o arquivo `compose.yaml` (localizado em `docker/` ou raiz do projeto):
+   - Execute o arquivo `compose.yml` (localizado na raiz do projeto):
      ```sh
      docker compose up -d
      ```
@@ -44,8 +44,8 @@
 
 ## OpenAPI
 - A documentação da API está disponível via Swagger/OpenAPI em:
-  - `http://localhost:8080/swagger-ui/index.html`
-  - `http://localhost:8080/v3/api-docs`
+  - [Swagger UI](http://localhost:8080/swagger-ui/index.html)
+  - [OpenAPI Docs](http://localhost:8080/v3/api-docs)
 
 ## Style e EditorConfig
 - O projeto utiliza arquivo `.editorconfig` para padronização de estilos de código.
