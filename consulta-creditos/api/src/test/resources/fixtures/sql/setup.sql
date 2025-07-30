@@ -1,13 +1,3 @@
--- ESTRUTURA INICAL DO BANCO DE DADOS
-DO $$
-    BEGIN
-        IF NOT EXISTS (
-            SELECT FROM pg_database WHERE datname = 'gestionna'
-        ) THEN
-            EXECUTE 'CREATE DATABASE gestionna';
-        END IF;
-    END $$;
-
 -- TODO: DISABLE SPRING HIBERNATE DDL AUTO CREATE
 CREATE TABLE IF NOT EXISTS public.credito
 (

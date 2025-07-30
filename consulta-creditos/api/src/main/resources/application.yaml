@@ -29,6 +29,8 @@ spring:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     properties:
       allow.auto.create.topics: true
+  profiles:
+    active: test
 
 springdoc:
   api-docs:
