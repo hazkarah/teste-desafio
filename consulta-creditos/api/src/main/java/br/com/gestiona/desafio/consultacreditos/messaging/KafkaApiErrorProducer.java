@@ -1,5 +1,7 @@
 package br.com.gestiona.desafio.consultacreditos.messaging;
 
+import static br.com.gestiona.desafio.consultacreditos.messaging.MessageConstants.CONSULTA_CREDITO_ERRORS;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +25,7 @@ public class KafkaApiErrorProducer {
     public void sendError(Object errorDto) {
         try {
             String message = objectMapper.writeValueAsString(errorDto);
-            kafkaTemplate.send("consulta-credito-errors", message).get(5, java.util.concurrent.TimeUnit.SECONDS);
+            kafkaTemplate.send(CONSULTA_CREDITO_ERRORS, message).get(5, java.util.concurrent.TimeUnit.SECONDS);
         } catch (Exception e) {
             log.error("Erro ao enviar mensagem para o Kafka: {}", e.getMessage()); // Log/Handle error
         }

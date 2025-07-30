@@ -1,5 +1,7 @@
 package br.com.gestiona.desafio.consultacreditos.service;
 
+import static br.com.gestiona.desafio.consultacreditos.messaging.MessageConstants.CONSULTA_CREDITO;
+
 import lombok.RequiredArgsConstructor;
 
 import org.modelmapper.ModelMapper;
@@ -38,7 +40,7 @@ public class CreditoService implements CreditoServiceAdapter {
 
         Page<CreditoDTO> result = new PageImpl<>(page.getContent().stream().map(credito -> modelMapper.map(credito, CreditoDTO.class))
                 .toList(), pageable, page.getTotalElements());
-        result.forEach(dto -> kafkaCreditoProducer.enviaAuditoriaConsultaCredito("consulta-creditos", dto));
+        result.forEach(dto -> kafkaCreditoProducer.enviaAuditoriaConsultaCredito(CONSULTA_CREDITO, dto));
         return result;
     }
 
@@ -53,7 +55,7 @@ public class CreditoService implements CreditoServiceAdapter {
         CreditoDTO dto = creditoRepository.findByNumeroCredito(numeroCredito)
                 .map(credito -> modelMapper.map(credito, CreditoDTO.class))
                 .orElseThrow(() -> new BusinessException(String.format("Credito nao encontrado pelo numero do credito: %s", numeroCredito), "credito.nao.encontrado"));
-        kafkaCreditoProducer.enviaAuditoriaConsultaCredito("consulta-creditos", dto);
+        kafkaCreditoProducer.enviaAuditoriaConsultaCredito(CONSULTA_CREDITO, dto);
         return dto;
     }
 }

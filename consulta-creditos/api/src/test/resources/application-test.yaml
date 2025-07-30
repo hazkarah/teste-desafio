@@ -1,0 +1,6 @@
+spring:
+  kafka:
+    consumer:
+      group-id: consulta-creditos-group
+    properties:
+      allow.auto.create.topics: true
