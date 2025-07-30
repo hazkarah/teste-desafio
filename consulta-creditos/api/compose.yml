@@ -1,60 +1,12 @@
-name: gestionna-teste
+name: gestionna-dev-api
 
 services:
-#  api:
-#    build:
-#      context: ./api
-#      dockerfile: docker/Dockerfile
-#    container_name: api-creditos
-#    environment:
-#      # Configurações do banco
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5430/creditos_db
-#      SPRING_DATASOURCE_USERNAME: postgres
-#      SPRING_DATASOURCE_PASSWORD: postgres
-#
-#      # Configurações do Kafka
-#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9093
-#
-#      # Configurações gerais
-#      SPRING_PROFILES_ACTIVE: docker
-#      SERVER_PORT: 8080
-#      LOG_LEVEL: INFO
-#      LOG_FILE: /app/logs/application.log
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      postgres:
-#        condition: service_healthy
-#      kafka:
-#        condition: service_healthy
-#    networks:
-#      - creditos
-#    restart: unless-stopped
-#    healthcheck:
-#      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 5
-#
-#  app:
-#    build:
-#      context: ./app
-#      dockerfile: docker/Dockerfile
-#    container_name: app-creditos
-#    ports:
-#      - "80:80"
-#    depends_on:
-#      - api
-#    networks:
-#      - creditos
-#    restart: unless-stopped
-
   # Servicos Base
   postgres:
     image: postgres:16
     container_name: postgres-creditos
     environment:
-      POSTGRES_DB: creditos 
+      POSTGRES_DB: gestionna
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
@@ -66,7 +18,7 @@ services:
       - creditos
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d creditos"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d gestionna"]
       interval: 30s
       timeout: 10s
       retries: 5

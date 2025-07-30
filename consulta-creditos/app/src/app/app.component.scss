@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+html, body {
+  margin: 0 !important;
+  padding: 0;
+  height: 100%;
+  box-sizing: border-box;
+}

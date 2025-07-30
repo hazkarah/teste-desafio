@@ -1,0 +1,62 @@
+.credito-card {
+  @apply bg-white shadow rounded p-4 mb-4;
+}
+
+.credito-label {
+  @apply font-semibold;
+}
+
+.credito-value {
+  @apply text-gray-700;
+}
+
+.loading {
+  @apply animate-pulse text-blue-600;
+}
+
+.error {
+  @apply text-red-600;
+}
+
+.credito-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.credito-row {
+  width: 100%;
+  .credito-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 50%;
+    min-width: 200px;
+  }
+}
+
+.credito-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.credito-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mat-column-numeroCredito {
+  font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  .credito-detail {
+    grid-template-columns: 1fr;
+  }
+
+  .credito-grid {
+    grid-template-columns: 1fr;
+  }
+}

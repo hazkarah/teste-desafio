@@ -1,4 +1,4 @@
-package br.com.gestiona.desafio.consultacreditos;
+package br.com.gestiona.desafio.consultacreditos.config;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -8,18 +8,19 @@ import org.testcontainers.kafka.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
 @TestConfiguration(proxyBeanMethods = false)
-class TestcontainersConfiguration {
+public class ConsultaCreditosTestcontainersConfiguration {
 
 	@Bean
 	@ServiceConnection
 	KafkaContainer kafkaContainer() {
-		return new KafkaContainer(DockerImageName.parse("apache/kafka-native:latest"));
+		DockerImageName imageName = DockerImageName.parse("apache/kafka:3.7.0");
+		return new KafkaContainer(imageName);
 	}
-
 	@Bean
 	@ServiceConnection
 	PostgreSQLContainer<?> postgresContainer() {
-		return new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"));
+		return new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"))
+			.withDatabaseName("gestionna");
 	}
 
 }
