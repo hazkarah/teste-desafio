@@ -1,53 +1,51 @@
-name: gestionna-teste
+name: gestionna-run
 
 services:
-#  api:
-#    build:
-#      context: ./api
-#      dockerfile: docker/Dockerfile
-#    container_name: api-creditos
-#    environment:
-#      # Configurações do banco
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5430/creditos_db
-#      SPRING_DATASOURCE_USERNAME: postgres
-#      SPRING_DATASOURCE_PASSWORD: postgres
-#
-#      # Configurações do Kafka
-#      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9093
-#
-#      # Configurações gerais
-#      SPRING_PROFILES_ACTIVE: docker
-#      SERVER_PORT: 8080
-#      LOG_LEVEL: INFO
-#      LOG_FILE: /app/logs/application.log
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      postgres:
-#        condition: service_healthy
-#      kafka:
-#        condition: service_healthy
-#    networks:
-#      - creditos
-#    restart: unless-stopped
-#    healthcheck:
-#      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 5
-#
-#  app:
-#    build:
-#      context: ./app
-#      dockerfile: docker/Dockerfile
-#    container_name: app-creditos
-#    ports:
-#      - "80:80"
-#    depends_on:
-#      - api
-#    networks:
-#      - creditos
-#    restart: unless-stopped
+  api:
+    build:
+      context: ./api
+      dockerfile: docker/Dockerfile
+    container_name: api-creditos
+    environment:
+      # Configurações do banco
+      DATABASE_URL: jdbc:postgresql://postgres:5432/gestionna
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+      # Configurações do Kafka
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9093
+
+      # Configurações gerais
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8080
+      LOG_LEVEL: INFO
+      LOG_FILE: /app/logs/application.log
+    ports:
+      - "8501:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - creditos
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  app:
+    build:
+      context: ./app
+      dockerfile: docker/Dockerfile
+    container_name: app-creditos
+    ports:
+      - "8500:80"
+    depends_on:
+      - api
+    networks:
+      - creditos
+    restart: unless-stopped
 
   # Servicos Base
   postgres:
