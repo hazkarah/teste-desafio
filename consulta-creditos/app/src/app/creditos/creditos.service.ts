@@ -20,7 +20,7 @@ export class CreditosService {
     const headers = new HttpHeaders({
       Authorization: this.auth.getBasicAuthHeader()
     });
-    return this.http.get<Credito>(`/api/creditos/numero/${numeroCredito}`, {headers});
+    return this.http.get<Credito>(`/api/creditos/credito/${numeroCredito}`, {headers});
   }
 }
 

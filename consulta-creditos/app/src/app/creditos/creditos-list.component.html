@@ -1,45 +1,157 @@
 <div class="max-w-xl mx-auto p-4">
   <h2 class="text-2xl font-bold mb-4">Consulta de Créditos</h2>
   <form [formGroup]="form" (ngSubmit)="buscar()" class="space-y-4">
-    <div class="flex items-center gap-4">
-      <label class="flex items-center gap-2">
-        <input type="radio" formControlName="tipoConsulta" value="nfse" />
-        Busca NFS-e
-      </label>
-      <label class="flex items-center gap-2">
-        <input type="radio" formControlName="tipoConsulta" value="credito" />
-        Número do Crédito
-      </label>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <mat-radio-group formControlName="tipoConsulta">
+        <mat-radio-button value="nfse">Busca NFS-e</mat-radio-button>
+        <mat-radio-button value="credito">Número do Crédito</mat-radio-button>
+      </mat-radio-group>
     </div>
-    <input
-      class="w-full border rounded px-3 py-2"
-      type="text"
-      formControlName="valorConsulta"
-      placeholder="Digite o valor para consulta"
-      required
-    />
-    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
-            [disabled]="carregando">
-      {{ carregando ? 'Buscando...' : 'Buscar' }}
-    </button>
+    <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px;">
+      <mat-form-field appearance="outline">
+        <mat-label>Digite o valor para consulta</mat-label>
+        <input matInput type="text" formControlName="valorConsulta" required/>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit"
+              [disabled]="carregando">
+        {{ carregando ? 'Buscando...' : 'Buscar' }}
+      </button>
+    </div>
   </form>
 
   <div *ngIf="erro" class="text-red-600 mt-4">{{ erro }}</div>
 
-  <div *ngIf="credito" class="mt-6 bg-white shadow rounded p-4">
+  <div *ngIf="credito" class="credito-detail mt-6">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Detalhes do Crédito</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="credito-grid">
+          <div class="credito-row">
+            <mat-form-field appearance="outline" class="credito-label">
+              <mat-label>Número Crédito</mat-label>
+              <input matInput [value]="credito.numeroCredito" readonly />
+            </mat-form-field>
+          </div>
+          <div class="credito-row">
+            <mat-form-field appearance="outline" class="credito-label">
+              <mat-label>Número NFS-e</mat-label>
+              <input matInput [value]="credito.numeroNfse" readonly />
+            </mat-form-field>
+          </div>
+          <div class="credito-row">
+            <mat-form-field appearance="outline" class="credito-label">
+              <mat-label>Data Constituição</mat-label>
+              <input matInput [value]="credito.dataConstituicao | date:'dd/MM/yyyy'" readonly />
+            </mat-form-field>
+          </div>
+          <div class="credito-row">
+            <mat-form-field appearance="outline" class="credito-label">
+              <mat-label>Valor ISSQN</mat-label>
+              <input matInput [value]="credito.valorIssqn | currency:'BRL'" readonly />
+            </mat-form-field>
+          </div>
+          <div class="credito-row">
+            <mat-form-field appearance="outline" class="credito-label">
+              <mat-label>Tipo de Crédito</mat-label>
+              <input matInput [value]="credito.tipoCredito" readonly />
+            </mat-form-field>
+          </div>
+          <div class="credito-row">
+            <mat-form-field appearance="outline" class="credito-label">
+              <mat-label>Simples Nacional</mat-label>
+              <input matInput [value]="credito.simplesNacional == 'true' ? 'Sim' : 'Não'" readonly />
+            </mat-form-field>
+          </div>
+          <div class="credito-row">
+            <mat-form-field appearance="outline" class="credito-label">
+              <mat-label>Alíquota</mat-label>
+              <input matInput [value]="credito.aliquota" readonly />
+            </mat-form-field>
+          </div>
+          <div class="credito-row">
+            <mat-form-field appearance="outline" class="credito-label">
+              <mat-label>Valor Faturado</mat-label>
+              <input matInput [value]="credito.valorFaturado | currency:'BRL'" readonly />
+            </mat-form-field>
+          </div>
+          <div class="credito-row">
+            <mat-form-field appearance="outline" class="credito-label">
+              <mat-label>Valor Dedução</mat-label>
+              <input matInput [value]="credito.valorDeducao | currency:'BRL'" readonly />
+            </mat-form-field>
+          </div>
+          <div class="credito-row">
+            <mat-form-field appearance="outline" class="credito-label">
+              <mat-label>Base de Cálculo</mat-label>
+              <input matInput [value]="credito.baseCalculo | currency:'BRL'" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="creditoList && creditoList.length > 0" class="mt-6 bg-white shadow rounded p-4">
     <h3 class="text-lg font-semibold mb-2">Detalhes do Crédito</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-      <div><strong>Número Crédito:</strong> {{ credito.numeroCredito }}</div>
-      <div><strong>Número NFS-e:</strong> {{ credito.numeroNfse }}</div>
-      <div><strong>Data Constituição:</strong> {{ credito.dataConstituicao }}</div>
-      <div><strong>Valor ISSQN:</strong> {{ credito.valorIssqn | currency:'BRL' }}</div>
-      <div><strong>Tipo Crédito:</strong> {{ credito.tipoCredito }}</div>
-      <div><strong>Simples Nacional:</strong> {{ credito.simplesNacional }}</div>
-      <div><strong>Alíquota:</strong> {{ credito.aliquota }}%</div>
-      <div><strong>Valor Faturado:</strong> {{ credito.valorFaturado | currency:'BRL' }}</div>
-      <div><strong>Valor Dedução:</strong> {{ credito.valorDeducao | currency:'BRL' }}</div>
-      <div><strong>Base de Cálculo:</strong> {{ credito.baseCalculo | currency:'BRL' }}</div>
-    </div>
+    <table mat-table [dataSource]="creditoList" class="mat-elevation-z8 w-full">
+      <!-- Número Crédito -->
+      <ng-container matColumnDef="numeroCredito">
+        <th mat-header-cell *matHeaderCellDef>Número Crédito</th>
+        <td mat-cell *matCellDef="let credito">
+          <a [routerLink]="['/creditos/numero', credito.numeroCredito]" class="font-bold text-blue-700 hover:underline">
+            {{ credito.numeroCredito }}
+          </a>
+        </td>
+      </ng-container>
+      <!-- Número NFS-e -->
+      <ng-container matColumnDef="numeroNfse">
+        <th mat-header-cell *matHeaderCellDef>Número NFS-e</th>
+        <td mat-cell *matCellDef="let credito">{{ credito.numeroNfse }}</td>
+      </ng-container>
+      <!-- Data Constituição -->
+      <ng-container matColumnDef="dataConstituicao">
+        <th mat-header-cell *matHeaderCellDef>Data Constituição</th>
+        <td mat-cell *matCellDef="let credito">{{ credito.dataConstituicao }}</td>
+      </ng-container>
+      <!-- Valor ISSQN -->
+      <ng-container matColumnDef="valorIssqn">
+        <th mat-header-cell *matHeaderCellDef>Valor ISSQN</th>
+        <td mat-cell *matCellDef="let credito">{{ credito.valorIssqn | currency:'BRL' }}</td>
+      </ng-container>
+      <!-- Tipo Crédito -->
+      <ng-container matColumnDef="tipoCredito">
+        <th mat-header-cell *matHeaderCellDef>Tipo Crédito</th>
+        <td mat-cell *matCellDef="let credito">{{ credito.tipoCredito }}</td>
+      </ng-container>
+      <!-- Simples Nacional -->
+      <ng-container matColumnDef="simplesNacional">
+        <th mat-header-cell *matHeaderCellDef>Simples Nacional</th>
+        <td mat-cell *matCellDef="let credito">{{ credito.simplesNacional }}</td>
+      </ng-container>
+      <!-- Alíquota -->
+      <ng-container matColumnDef="aliquota">
+        <th mat-header-cell *matHeaderCellDef>Alíquota</th>
+        <td mat-cell *matCellDef="let credito">{{ credito.aliquota }}%</td>
+      </ng-container>
+      <!-- Valor Faturado -->
+      <ng-container matColumnDef="valorFaturado">
+        <th mat-header-cell *matHeaderCellDef>Valor Faturado</th>
+        <td mat-cell *matCellDef="let credito">{{ credito.valorFaturado | currency:'BRL' }}</td>
+      </ng-container>
+      <!-- Valor Dedução -->
+      <ng-container matColumnDef="valorDeducao">
+        <th mat-header-cell *matHeaderCellDef>Valor Dedução</th>
+        <td mat-cell *matCellDef="let credito">{{ credito.valorDeducao | currency:'BRL' }}</td>
+      </ng-container>
+      <!-- Base de Cálculo -->
+      <ng-container matColumnDef="baseCalculo">
+        <th mat-header-cell *matHeaderCellDef>Base de Cálculo</th>
+        <td mat-cell *matCellDef="let credito">{{ credito.baseCalculo | currency:'BRL' }}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
   </div>
 </div>
-
