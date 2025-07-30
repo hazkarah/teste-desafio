@@ -51,6 +51,15 @@ A aplicação utiliza as seguintes portas padrão:
 
 Certifique-se de que não há outros containers ou serviços utilizando as portas **8500** e **8501** antes de subir a aplicação. Caso haja conflito, ajuste as portas no arquivo `compose.yml` conforme necessário.
 
+
+## Mensageria
+
+A solução utiliza o Apache Kafka para comunicação assíncrona entre os serviços. O Kafka é responsável pelo processamento de eventos e integração entre sistemas.
+
+- **Kafka UI:** Ferramenta para visualização e gerenciamento dos tópicos e mensagens do Kafka.
+    - Acesse em: [http://localhost:8090](http://localhost:8090)
+
+
 ## Observações
 - O arquivo `compose.yml` define todos os serviços necessários para o funcionamento do sistema.
 - Logs da API podem ser encontrados em `/app/logs/application.log` dentro do container.
