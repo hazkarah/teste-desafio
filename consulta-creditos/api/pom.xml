@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.gestiona.desafio</groupId>
 	<artifactId>consulta-creditos</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>consulta-creditos</name>
 	<description>API para consulta de créditos ISSQN</description>
 	<url/>
